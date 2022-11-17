@@ -399,6 +399,21 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 
+	case '3':
+		altura = altura + incALT;
+		if (altura > 3) incALT = -incALT;
+		if (altura < -1) incALT = -incALT;
+		glutPostRedisplay();
+		break;
+
+	case '4':
+		altura = altura - incALT;
+		if (altura > 3) incALT = -incALT;
+		if (altura < -1) incALT = -incALT;
+		glutPostRedisplay();
+		break;
+
+
 	case 'R': case 'r':
 		sempreRodar = !sempreRodar;
 		glutPostRedisplay();
