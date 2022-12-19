@@ -32,6 +32,9 @@ GLfloat posicao_carro[4][4];
 GLfloat theta = 0.;
 GLfloat vel = 1.;
 
+//material que vai ser mudado com a letra V
+GLint material = 4;
+
 
 //================================================================================
 //------------------------------------------------------------ Sistema Coordenadas 
@@ -73,7 +76,7 @@ GLfloat tam = 0.5;
 //………………………………………………………………………………………………………………………………………………………………………………………… A variar no programa
 //---------------------------------------------------- AMBIENTE - fixa
 GLint   Dia = 0;     //:::   'D'  
-GLfloat intensidadeDia = 1.0;
+GLfloat intensidadeDia = 2.0;
 GLfloat luzGlobalCorAmb[4] = { intensidadeDia, intensidadeDia,intensidadeDia, 1.0 };   // 
 
 
@@ -89,25 +92,32 @@ GLfloat localCorDifusa[4] = { luzR * intensidadeTeto, luzG * intensidadeTeto, lu
 GLfloat localCorEspecular[4] = { luzR * intensidadeTeto, luzG * intensidadeTeto, luzB * intensidadeTeto, 1.0 };
 
 //foco1
-GLint foco1 = 0;
-GLfloat posicaoFoco1[4] = { 0,10,0,1 };
-GLfloat corFoco1[4] = { 10.0, 0.0, 0.0, 1.0 };
+int contador=0;
+GLfloat R=1, G=0., B=0.;
+GLfloat intensidadeFoco = 0;
+GLfloat posicaoFoco[4] = { 0,10,0,1 };
+GLfloat corFoco1[4] = { R * intensidadeFoco, G * intensidadeFoco, B * intensidadeFoco, 1.0 };
 GLfloat direcaoFoco1[] = { 0, -1.0, 0.0,0.0};
 GLfloat anguloFoco = 40.0;
 
 //foco2
-GLfloat posicaoFoco2[4] = { 0,10,40,1 };
+GLfloat posicaoFoco1[4] = { 10,10,40,1 };
 
 //foco3
-GLfloat posicaoFoco3[4] = { 0,10,80,1 };
+GLfloat posicaoFoco2[4] = { 10,10,80,1 };
 
 //foco4
-GLfloat posicaoFoco4[4] = { 0,10,120,1 };
+GLfloat posicaoFoco3[4] = { 10,10,120,1 };
 
 //foco5
-GLfloat posicaoFoco5[4] = { 0,10,160,1 };
+GLfloat posicaoFoco4[4] = { 10,10,160,1 };
 
-
+//teto
+GLfloat posicaolampada[4] = { 0.1,15,0.1,1 };
+GLfloat intensidadeP = 2;
+GLfloat cor_amb[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,0 };
+GLfloat cor[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,1.0 };
+GLfloat cor_spec[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,1.0 };
 
 
 static GLfloat vertices[] = {
@@ -251,9 +261,79 @@ static GLfloat texturas[] = {
 
 
 
-void desenhaGaragem(void) {
+int alteraPostes = 0;
+
+void desenhaPostes(float x, int control) {
+	int a = 15;
+	int b = 16;
+	int c = 7;
+	if (control == 1) {
+		a = -a;
+		b = -b;
+		c = -c;
+	}
+	glPushMatrix();
+	initMaterials(2);
+	glTranslatef(c, 0, 0);
+	glBegin(GL_QUADS);
+	glVertex3f(a, -3, x - 1);
+	glVertex3f(a, -3, x);
+	glVertex3f(a, 10, x);
+	glVertex3f(a, 10, x - 1);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(a, -3, x - 1);
+	glVertex3f(a, -3, x);
+	glVertex3f(a, 10, x);
+	glVertex3f(a, 10, x - 1);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(b, -3, x);
+	glVertex3f(a, -3, x);
+	glVertex3f(a, 10, x);
+	glVertex3f(b, 10, x);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(b, -3, x - 1);
+	glVertex3f(a, -3, x - 1);
+	glVertex3f(a, 10, x - 1);
+	glVertex3f(b, 10, x - 1);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glVertex3f(b, 10, x - 1);
+	glVertex3f(c, 10, x - 1);
+	glVertex3f(c, 11, x - 1);
+	glVertex3f(b, 11, x - 1);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(b, 10, x);
+	glVertex3f(c, 10, x);
+	glVertex3f(c, 11, x);
+	glVertex3f(b, 11, x);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(b, 10, x);
+	glVertex3f(c, 10, x);
+	glVertex3f(c, 10, x - 1);
+	glVertex3f(b, 10, x - 1);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(b, 11, x);
+	glVertex3f(c, 11, x);
+	glVertex3f(c, 11, x-1);
+	glVertex3f(b, 11, x - 1);
+	glEnd();
+	glPopMatrix();
+
+}
+
+
+void desenhaGaragem() {
 		glNormal3f(1, 0, 0);
-		initMaterials(4);
+		initMaterials(material);
+		glPushMatrix();
+		glTranslatef(3, -1.2, 0);
 		glBegin(GL_QUADS);
 		// parede 1
 		glVertex3f(-15, -1.5f, -15);
@@ -285,8 +365,8 @@ void desenhaGaragem(void) {
 		glVertex3f(-15, 15, -15);
 		glVertex3f(15, 15, -15);
 		glEnd();
+		glPopMatrix();
 }
-GLfloat posicaolampada[4] = { 0,15,0,1 };
 
 void initLights(void) {
 	// Ambiente
@@ -298,15 +378,15 @@ void initLights(void) {
 	GLfloat Foco_al = 0.05f;
 	GLfloat Foco_aq = 0.0f;
 	GLfloat Foco_Expon = 2.0;
+
+
+
 	//glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, localCorAmbiente);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, localCorDifusa);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, localCorEspecular);
 	GLfloat dir[] = { 0,-1,-1,0 };
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, dir);
-
-
-
 
 
 
@@ -325,10 +405,19 @@ void initLights(void) {
 	//glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.1);
 	*/
 
-	// luz foco 2
-	glLightfv(GL_LIGHT3, GL_POSITION, posicaoFoco2);
+	// luz teto
+	glLightfv(GL_LIGHT1, GL_POSITION, posicaolampada);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, cor_amb);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, cor);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, cor_spec);
+
+
+
+	// luz foco 1
+	glLightfv(GL_LIGHT3, GL_POSITION, posicaoFoco1);
 	glLightfv(GL_LIGHT3, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT3, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, corFoco1);
 	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, Foco_ak);
 	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, Foco_al);
 	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, Foco_aq);
@@ -336,8 +425,8 @@ void initLights(void) {
 	glLightf(GL_LIGHT3, GL_SPOT_CUTOFF, anguloFoco);
 	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, direcaoFoco1);
 
-	// luz foco 3
-	glLightfv(GL_LIGHT4, GL_POSITION, posicaoFoco3);
+	// luz foco 2
+	glLightfv(GL_LIGHT4, GL_POSITION, posicaoFoco2);
 	glLightfv(GL_LIGHT4, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT4, GL_AMBIENT, corFoco1);
 	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, Foco_ak);
@@ -347,8 +436,8 @@ void initLights(void) {
 	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, anguloFoco);
 	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, direcaoFoco1);
 
-	// luz foco 4
-	glLightfv(GL_LIGHT5, GL_POSITION, posicaoFoco4);
+	// luz foco 3
+	glLightfv(GL_LIGHT5, GL_POSITION, posicaoFoco3);
 	glLightfv(GL_LIGHT5, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT5, GL_AMBIENT, corFoco1);
 	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, Foco_ak);
@@ -357,6 +446,17 @@ void initLights(void) {
 	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, Foco_Expon);
 	glLightf(GL_LIGHT5, GL_SPOT_CUTOFF, anguloFoco);
 	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, direcaoFoco1);
+
+	// luz foco 4
+	glLightfv(GL_LIGHT6, GL_POSITION, posicaoFoco4);
+	glLightfv(GL_LIGHT6, GL_DIFFUSE, corFoco1);
+	glLightfv(GL_LIGHT6, GL_AMBIENT, corFoco1);
+	glLightf(GL_LIGHT6, GL_CONSTANT_ATTENUATION, Foco_ak);
+	glLightf(GL_LIGHT6, GL_LINEAR_ATTENUATION, Foco_al);
+	glLightf(GL_LIGHT6, GL_QUADRATIC_ATTENUATION, Foco_aq);
+	glLightf(GL_LIGHT6, GL_SPOT_EXPONENT, Foco_Expon);
+	glLightf(GL_LIGHT6, GL_SPOT_CUTOFF, anguloFoco);
+	glLightfv(GL_LIGHT6, GL_SPOT_DIRECTION, direcaoFoco1);
 
 
 
@@ -369,7 +469,7 @@ void initTexturas()
 {
 	glGenTextures(1, &texture[0]);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	imag.LoadBmpFile("terra.bmp");
+	imag.LoadBmpFile("road.bmp");
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -428,11 +528,12 @@ void initialize(void)
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//……………………………………………………………………………………………………………………………Luzes
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT2);
+	//glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHT3);
 	glEnable(GL_LIGHT4);
 	glEnable(GL_LIGHT5);
+	glEnable(GL_LIGHT6);
 
 	//initMaterials(17);
 }
@@ -484,7 +585,7 @@ void drawEsfera()
 	glDisable(GL_TEXTURE_2D);
 }
 
-void drawChao() {
+/*void drawChao() {
 	float L = 1;
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -493,39 +594,145 @@ void drawChao() {
 		glTranslatef(0, -3, i);
 		glNormal3f(0, 1, 0);
 		initMaterials(2);
+		glBegin(GL_QUADS);
 		for(int p = -40; p<40;p++){
 			for(int f = -40; f< 40;f++){
-			glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 1.0f);    glVertex3i((f - 1), 0.1,  (p-1)); //A 
 			glTexCoord2f(1.0f, 0.0f); 	 glVertex3i((f-1), 0.1, p);  //B
 			glTexCoord2f(1.0f, 1.0f);    glVertex3i(f, 0.1, p); //C
 			glTexCoord2f(0.0f, 0.0f);  	 glVertex3i(f, 0.1, (p -1)); //D
-			glEnd();
 			}
 			}
-		glPopMatrix();
-	}
-	glDisable(GL_TEXTURE_2D);
-}
-
-void drawChaoNoMalha(void) {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	for (int i = -230; i <= 240; i += 80) {
-		glPushMatrix();
-		glTranslatef(0, -3, i);
-		initMaterials(2);
-		glNormal3f(0, 1, 0);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f);    glVertex3i(-40, 0, -40); //A 
-		glTexCoord2f(1.0f, 0.0f); 	 glVertex3i(-40, 0, 40);  //B
-		glTexCoord2f(1.0f, 1.0f);    glVertex3i(40, 0, 40); //C
-		glTexCoord2f(0.0f, 0.0f);  	 glVertex3i(40, 0, -40); //D
 		glEnd();
 		glPopMatrix();
 	}
 	glDisable(GL_TEXTURE_2D);
 }
+*/
+
+
+void drawChao() {
+	float L = 1;
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	int				i, j;
+	int dim = 150;
+	float			med_dim = (float)dim / 2;
+	for (int p = -80; p <= 240; p +=80) {
+		glPushMatrix();
+		glTranslatef(-40, -3, p);
+		glScalef(40, 1, 40);
+		glNormal3f(0, 1, 0);
+		initMaterials(2);
+		glBegin(GL_QUADS);
+		for (i = 0; i < dim; i++)
+			for (j = 0; j < dim; j++) {
+				glTexCoord2f((float)j / dim, (float)i / dim);
+				glVertex3d((float)j / med_dim, 0, (float)i / med_dim);
+				glTexCoord2f((float)(j + 1) / dim, (float)i / dim);
+				glVertex3d((float)(j + 1) / med_dim, 0, (float)i / med_dim);
+				glTexCoord2f((float)(j + 1) / dim, (float)(i + 1) / dim);
+				glVertex3d((float)(j + 1) / med_dim, 0,(float)(i + 1) / med_dim);
+				glTexCoord2f((float)j / dim, (float)(i + 1) / dim);
+				glVertex3d((float)j / med_dim, 0, (float)(i + 1) / med_dim);
+			}
+		glEnd();
+		glPopMatrix();
+	}
+	glDisable(GL_TEXTURE_2D);
+}
+
+
+
+
+
+
+void drawChaoNoMalha(void) {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	for (int i = -80; i <= 240; i += 80) {
+		glPushMatrix();
+		glTranslatef(0, -3, i);
+		initMaterials(2);
+		glNormal3f(0, -1, 0);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f);    glVertex3i(-40, 0.1, 40); //A 
+		glTexCoord2f(0.0f, 0.0f); 	 glVertex3i(-40, 0.1, -40);  //B
+		glTexCoord2f(1.0f, 0.0f);    glVertex3i(40, 0.1, -40); //C
+		glTexCoord2f(1.0f, 1.0f);  	 glVertex3i(40, 0.1, 40); //D
+		glEnd();
+		glPopMatrix();
+	}
+	glDisable(GL_TEXTURE_2D);
+}
+
+void desenhaJanelas(int x) {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	initMaterials(5);
+	if(x==1){
+		//desenha janela lado condutor
+		glPushMatrix();
+		initMaterials(5);
+		glTranslated(-tam, (2 * tam) - (tam * translacaovidro), -tam);
+		glScalef(0.80, 0.80, tam / 100);
+		desenhaCubo();
+		glPopMatrix();
+	}
+	if (x == 2) {
+		//desenha janela lado passageiro
+		glPushMatrix();
+		initMaterials(5);
+		glTranslated(-tam, (2 * tam) - (tam * translacaovidro), +tam);
+		glScalef(0.80, 0.80, tam / 100);
+		desenhaCubo();
+		glPopMatrix();
+	}
+	glDisable(GL_BLEND);
+}
+
+void desenhaCabine(void) {
+
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, cima);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, esquerda);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, direita);
+	//lado passageiro
+	glPushMatrix();
+	glTranslatef(0.45, 0, 0);
+	glScalef(0.1, 1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, frente);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-0.45, 0, 0);
+	glScalef(0.1, 1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, frente);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0, 0.45, 0);
+	glScalef(1, 0.1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, frente);
+	glPopMatrix();
+
+	//lado condutor
+	glPushMatrix();
+	glTranslatef(0.45, 0, 0);
+	glScalef(0.1, 1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, tras);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-0.45, 0, 0);
+	glScalef(0.1, 1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, tras);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0, 0.45, 0);
+	glScalef(1, 0.1, 1);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, tras);
+	glPopMatrix();
+
+
+}
+
 
 //======================================
 void drawScene() {
@@ -545,7 +752,7 @@ void drawScene() {
 		}
 	}
 	//desenha estrutura carro
-	glTranslatef(pos[0]+centrox, pos[1]+altura, pos[2]);
+	glTranslatef(pos[0]+centrox, pos[1]+altura-1.2, pos[2]);
 	glRotatef(rotacao, 0.0, 1.0, 0.0);
 	glScalef(2.5, 2.0, 2.5);
 	glPushMatrix();
@@ -556,7 +763,9 @@ void drawScene() {
 	glPopMatrix();
 	glPushMatrix();
 	glTranslated(-1 * tam, 2 * tam, 0);
-	desenhaCubo();
+	//cabine
+	desenhaCabine();
+	//desenhaCubo();
 	//glGetFloatv(GL_MODELVIEW_MATRIX, &posicao_carro[0][0]);
 	glPopMatrix();
 	//desenha farois frente
@@ -612,12 +821,7 @@ void drawScene() {
 	desenhaCubo();
 	glPopMatrix();
 	//desenha janela lado condutor
-	glPushMatrix();
-	initMaterials(5);
-	glTranslated(-tam, (2 * tam) - (tam * translacaovidro), -tam);
-	glScalef(0.80, 0.80, tam / 100);
-	desenhaCubo();
-	glPopMatrix();
+	desenhaJanelas(1);
 	//desenha porta lado condutor
 	glPushMatrix();
 	initMaterials(17);
@@ -633,12 +837,7 @@ void drawScene() {
 	desenhaCubo();
 	glPopMatrix();
 	//desenha janela lado passageiro
-	glPushMatrix();
-	initMaterials(5);
-	glTranslated(-tam, (2 * tam) - (tam * translacaovidro), +tam);
-	glScalef(0.80, 0.80, tam / 100);
-	desenhaCubo();
-	glPopMatrix();
+	desenhaJanelas(2);
 	//desenha porta lado passageiro
 	glPushMatrix();
 	initMaterials(17);
@@ -708,6 +907,19 @@ initLights();
 	if (malhaPol == 1)drawChao();
 	else drawChaoNoMalha();
 	desenhaGaragem();
+	if (alteraPostes == 1) {
+		desenhaPostes(40,1);
+		desenhaPostes(80,1);
+		desenhaPostes(120,1);
+		desenhaPostes(160,1);
+	}
+	else {
+		desenhaPostes(40, 0);
+		desenhaPostes(80, 0);
+		desenhaPostes(120, 0);
+		desenhaPostes(160, 0);
+	}
+
 	drawEixos();
 	drawEsfera();
 	drawScene();
@@ -730,6 +942,32 @@ initLights();
 	glutSwapBuffers();
 }
 
+void updateLuz() {
+	corFoco1[0] = R * intensidadeFoco;
+	corFoco1[1] = G * intensidadeFoco;
+	corFoco1[2] = B * intensidadeFoco;
+	glLightfv(GL_LIGHT6, GL_DIFFUSE, corFoco1);
+	glLightfv(GL_LIGHT6, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT5, GL_DIFFUSE, corFoco1);
+	glLightfv(GL_LIGHT5, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE, corFoco1);
+	glLightfv(GL_LIGHT4, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, corFoco1);
+	glLightfv(GL_LIGHT3, GL_AMBIENT, corFoco1);
+}
+
+
+void updateFocos() {
+	posicaoFoco1[0] = -posicaoFoco1[0];
+	posicaoFoco2[0] = -posicaoFoco2[0];
+	posicaoFoco3[0] = -posicaoFoco3[0];
+	posicaoFoco4[0] = -posicaoFoco4[0];
+	glLightfv(GL_LIGHT3, GL_POSITION, posicaoFoco1);
+	glLightfv(GL_LIGHT4, GL_POSITION, posicaoFoco2);
+	glLightfv(GL_LIGHT5, GL_POSITION, posicaoFoco3);
+	glLightfv(GL_LIGHT6, GL_POSITION, posicaoFoco4);
+
+}
 
 void Timer(int value)
 {
@@ -740,8 +978,50 @@ void Timer(int value)
 //======================================================= EVENTOS
 void keyboard(unsigned char key, int x, int y) {
 
-
 	switch (key) {
+	
+
+	case 'X': case 'x':
+		if (alteraPostes == 0)alteraPostes = 1;
+		else alteraPostes = 0;
+		updateFocos();
+		glutPostRedisplay();
+		break;
+
+	case 'i':
+	case 'I':
+		intensidadeFoco = intensidadeFoco + 0.2;
+		if (intensidadeFoco > 10) intensidadeFoco = 0;
+		updateLuz();
+		glutPostRedisplay();
+		break;
+	case 'G': case 'g':
+		contador++;
+		if (contador > 2)contador = 0;
+		if (contador == 0) {
+			R = 1;
+			G = 0;
+			B = 0;
+		}
+		if (contador == 1) {
+			R = 0;
+			G = 1;
+			B = 0;
+		}
+		if (contador == 2) {
+			R = 0;
+			G = 0;
+			B = 1;
+		}
+		updateLuz();
+		glutPostRedisplay();
+		break;
+
+	case 'V': case 'v':
+		material++;
+		if (material > 7) material = 4;
+		glutPostRedisplay();
+		break;
 
 	case '+':
 		sempreRodarParaBrisas = !sempreRodarParaBrisas;
