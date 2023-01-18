@@ -36,13 +36,11 @@ GLfloat vel = 1.;
 GLint material = 4;
 
 
-//================================================================================
-//------------------------------------------------------------ Sistema Coordenadas 
-GLint		wScreen = 1920, hScreen = 1080;		//.. janela - pixeis
-GLfloat		SIZE = 10.0;	//.. Mundo  SIZE=coordenadas x=y=z
+GLint		wScreen = 1920, hScreen = 1080;	
+GLfloat		SIZE = 10.0;
 
 
-//========================================================= Animacao objeto Mesa
+
 float	  centrox = 0;
 float	  rotacao = 0;
 float	  rotacao_parabrisas = 0;
@@ -57,27 +55,23 @@ GLint     faceVisivel = 0;
 
 //============================================================= Observador
 GLfloat  rVisao = 8, aVisao = -0.5 * PI, incVisao = 1, aVisaoCopia = -0.5;
-GLfloat  obsP[] = { rVisao * sin(aVisao), 2.0, rVisao * cos(aVisao) };
+GLfloat  obsP[] = { rVisao * sin(aVisao) + pos[0], 2.0, rVisao * cos(aVisao)+pos[2]};
 float	 anguloZ = 35;
 
 
 int malhaPol = 1;
 
-//===========================================================Variaveis e constantes
+
 GLint     msec = 50;
 
-
-//==================================================================== VERTEX ARAY
-//------------------------------------------- coordenadas + normais + cores
 GLfloat tam = 0.5;
 
 
 
-//………………………………………………………………………………………………………………………………………………………………………………………… A variar no programa
-//---------------------------------------------------- AMBIENTE - fixa
-GLint   Dia = 0;     //:::   'D'  
-GLfloat intensidadeDia = 2.0;
-GLfloat luzGlobalCorAmb[4] = { intensidadeDia, intensidadeDia,intensidadeDia, 1.0 };   // 
+
+GLint   Dia = 0;
+GLfloat intensidadeDia = 1.0;
+GLfloat luzGlobalCorAmb[4] = { intensidadeDia, intensidadeDia,intensidadeDia, 1.0 };
 
 
 // Luz teto
@@ -113,9 +107,9 @@ GLfloat posicaoFoco3[4] = { 10,10,120,1 };
 GLfloat posicaoFoco4[4] = { 10,10,160,1 };
 
 //teto
-GLfloat posicaolampada[4] = { 0.1,15,0.1,1 };
+GLfloat posicaolampada[4] = { 0.1,14,0.1,1 };
 GLfloat intensidadeP = 2;
-GLfloat cor_amb[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,0 };
+GLfloat cor_amb[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,1.0 };
 GLfloat cor[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,1.0 };
 GLfloat cor_spec[4] = { 0.8 * intensidadeP,0.8 * intensidadeP,0 * intensidadeP,1.0 };
 
@@ -380,7 +374,8 @@ void initLights(void) {
 	GLfloat Foco_Expon = 2.0;
 
 
-
+	//glPushMatrix();
+	//glTranslatef(20, 0, 0);
 	//glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, localCorAmbiente);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, localCorDifusa);
@@ -406,11 +401,11 @@ void initLights(void) {
 	*/
 
 	// luz teto
+	
 	glLightfv(GL_LIGHT1, GL_POSITION, posicaolampada);
 	glLightfv(GL_LIGHT1, GL_AMBIENT, cor_amb);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, cor);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, cor_spec);
-
 
 
 	// luz foco 1
@@ -429,6 +424,7 @@ void initLights(void) {
 	glLightfv(GL_LIGHT4, GL_POSITION, posicaoFoco2);
 	glLightfv(GL_LIGHT4, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT4, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT4, GL_SPECULAR, corFoco1);
 	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, Foco_ak);
 	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, Foco_al);
 	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, Foco_aq);
@@ -440,6 +436,7 @@ void initLights(void) {
 	glLightfv(GL_LIGHT5, GL_POSITION, posicaoFoco3);
 	glLightfv(GL_LIGHT5, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT5, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT5, GL_SPECULAR, corFoco1);
 	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, Foco_ak);
 	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, Foco_al);
 	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, Foco_aq);
@@ -451,6 +448,7 @@ void initLights(void) {
 	glLightfv(GL_LIGHT6, GL_POSITION, posicaoFoco4);
 	glLightfv(GL_LIGHT6, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT6, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT6, GL_SPECULAR, corFoco1);
 	glLightf(GL_LIGHT6, GL_CONSTANT_ATTENUATION, Foco_ak);
 	glLightf(GL_LIGHT6, GL_LINEAR_ATTENUATION, Foco_al);
 	glLightf(GL_LIGHT6, GL_QUADRATIC_ATTENUATION, Foco_aq);
@@ -458,7 +456,7 @@ void initLights(void) {
 	glLightf(GL_LIGHT6, GL_SPOT_CUTOFF, anguloFoco);
 	glLightfv(GL_LIGHT6, GL_SPOT_DIRECTION, direcaoFoco1);
 
-
+	//glPopMatrix();
 
 }
 
@@ -653,8 +651,8 @@ void drawChaoNoMalha(void) {
 	for (int i = -80; i <= 240; i += 80) {
 		glPushMatrix();
 		glTranslatef(0, -3, i);
+		glNormal3f(0, 1, 0);
 		initMaterials(2);
-		glNormal3f(0, -1, 0);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f);    glVertex3i(-40, 0.1, 40); //A 
 		glTexCoord2f(0.0f, 0.0f); 	 glVertex3i(-40, 0.1, -40);  //B
@@ -756,7 +754,7 @@ void drawScene() {
 	glRotatef(rotacao, 0.0, 1.0, 0.0);
 	glScalef(2.5, 2.0, 2.5);
 	glPushMatrix();
-	initMaterials(17);
+	initMaterials(7);
 	glPushMatrix();
 	glScalef(2, 1, 1);
 	desenhaCubo();
@@ -824,7 +822,7 @@ void drawScene() {
 	desenhaJanelas(1);
 	//desenha porta lado condutor
 	glPushMatrix();
-	initMaterials(17);
+	initMaterials(7);
 	glTranslated(-tam, tam - 0.6 * tam, -tam-tam/100);
 	glScalef(1, 0.8, tam / 99);
 	desenhaCubo();
@@ -840,7 +838,7 @@ void drawScene() {
 	desenhaJanelas(2);
 	//desenha porta lado passageiro
 	glPushMatrix();
-	initMaterials(17);
+	initMaterials(7);
 	glTranslated(-tam, tam - 0.6 * tam, tam+tam/100);
 	glScalef(1, 0.8, tam / 99);
 	desenhaCubo();
@@ -897,12 +895,22 @@ void display(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-
-	gluLookAt(obsP[0] + pos[0], obsP[1] + pos[1], obsP[2] + pos[2], pos[0], pos[1], pos[2], 0, 1, 0);
 	
-initLights();
 
+	gluLookAt(obsP[0], obsP[1], obsP[2], pos[0], pos[1], pos[2], 0, 1, 0);
 	
+	
+	initLights();
+	//glDisable(GL_LIGHT1);
+
+	/*
+	glColor3f(1., 1., 1.);
+	glPushMatrix();
+	glTranslatef(0.1, 14, 0.1);
+	glScaled(3., 3., 3.);
+	glutSolidSphere(1., 8, 8);
+	glPopMatrix();
+	*/
 
 	if (malhaPol == 1)drawChao();
 	else drawChaoNoMalha();
@@ -934,7 +942,20 @@ initLights();
 	glLoadIdentity();
 	gluLookAt(0, 30, 0, 0, 0, 0, 0, 0, -1);
 	initLights();
-	drawChao();
+	if (malhaPol == 1)drawChao();
+	else drawChaoNoMalha();
+	if (alteraPostes == 1) {
+		desenhaPostes(40, 1);
+		desenhaPostes(80, 1);
+		desenhaPostes(120, 1);
+		desenhaPostes(160, 1);
+	}
+	else {
+		desenhaPostes(40, 0);
+		desenhaPostes(80, 0);
+		desenhaPostes(120, 0);
+		desenhaPostes(160, 0);
+	}
 	drawEixos();
 	drawScene();
 
@@ -948,12 +969,16 @@ void updateLuz() {
 	corFoco1[2] = B * intensidadeFoco;
 	glLightfv(GL_LIGHT6, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT6, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT6, GL_SPECULAR, corFoco1);
 	glLightfv(GL_LIGHT5, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT5, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT5, GL_SPECULAR, corFoco1);
 	glLightfv(GL_LIGHT4, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT4, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT4, GL_SPECULAR, corFoco1);
 	glLightfv(GL_LIGHT3, GL_DIFFUSE, corFoco1);
 	glLightfv(GL_LIGHT3, GL_AMBIENT, corFoco1);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, corFoco1);
 }
 
 
@@ -979,7 +1004,7 @@ void Timer(int value)
 void keyboard(unsigned char key, int x, int y) {
 
 	switch (key) {
-	
+
 
 	case 'X': case 'x':
 		if (alteraPostes == 0)alteraPostes = 1;
@@ -1068,14 +1093,14 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'A': case 'a':
 		aVisao -= 0.1;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 		glutPostRedisplay();
 		break;
 	case 'D': case 'd':
 		aVisao += 0.1;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 		glutPostRedisplay();
 		break;
 	case 'Z': case 'z':
@@ -1096,14 +1121,14 @@ void keyboard(unsigned char key, int x, int y) {
 		//------------------------------ rotacao	
 	case 'E': case 'e':
 		rotacao = rotacao + 2.5;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 		glutPostRedisplay();
 		break;
 	case 'F': case 'f':
 		rotacao = rotacao - 2.5;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 		glutPostRedisplay();
 		break;
 
@@ -1113,12 +1138,8 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 
-		//------------------------------ Cull Face
+
 	case 'C': case 'c':
-		//======================================
-		//  <><><><><><> Alternar Face Visivel  ???
-		//  <><><><><><> Ativa / Inativa  
-		//======================================
 		faceVisivel++;
 		glEnable(GL_CULL_FACE);
 		switch ((faceVisivel % 4)) {
@@ -1152,28 +1173,28 @@ void keyboard(unsigned char key, int x, int y) {
 
 
 void teclasNotAscii(int key, int x, int y) {
-
-	//=========================================================
-	//  <><><><><><>  Movimento do observador  ???
-	//=========================================================
 	//GLfloat  obsP[] = { rVisao * sin(aVisao) + cos(rotacao * PI / 180.), 2.0, rVisao * cos(aVisao) + sin(rotacao * PI / 180.)};
 	if (key == GLUT_KEY_UP) {
 		pos[0] = pos[0] + vel * cos(rotacao * PI / 180.);
 		pos[2] = pos[2] - vel * sin(rotacao * PI / 180.);
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 	}
 	if (key == GLUT_KEY_DOWN) {
 		pos[0] = pos[0] - vel * cos(rotacao * PI / 180.);
 		pos[2] = pos[2] + vel * sin(rotacao * PI / 180.);
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 	}
 	if (key == GLUT_KEY_LEFT){
 		rotacao += 3.;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 	}
 	if (key == GLUT_KEY_RIGHT){
 		rotacao -= 3.;
-		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.));
-		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.));
+		obsP[0] = rVisao * sin(aVisao + (rotacao * PI / 180.)) + pos[0];
+		obsP[2] = rVisao * cos(aVisao + (rotacao * PI / 180.)) + pos[2];
 	}
 	glutPostRedisplay();
 
@@ -1187,9 +1208,8 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(wScreen, hScreen);
 	glutInitWindowPosition(400, 100);
-	glutCreateWindow("Ganda Carro - Projeto CG 2022/2023");
+	glutCreateWindow("Ganda Carro - Projeto CG 2022/2023 (M-malha; G-cores_luz; V-muda_materiais; X-pos_luzes;+-rotacao_parabrisas;1/2-sobe/desce_vidros;I-intensidade)");
 	initialize();
-
 	glutSpecialFunc(teclasNotAscii);
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
